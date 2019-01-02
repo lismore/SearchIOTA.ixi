@@ -1,0 +1,34 @@
+// Copyright 2018-2019 IOTA Foundation: https://github.com/iotaledger/chat.ixi/blob/master/src/main/java/org/iota/ixi/utils/FileOperations.java
+
+package com.searchiota.ixi.utils;
+
+import java.io.*;
+import java.util.StringJoiner;
+
+public final class FileOperations {
+
+    public static void writeToFile(File file, String data) {
+        try (PrintStream out = new PrintStream(new FileOutputStream(file))) {
+            out.print(data);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String readFromFile(File file) throws IOException {
+        if(!file.exists())
+            throw new IllegalArgumentException("file "+file.getAbsolutePath()+" does not exist");
+        BufferedReader br = new BufferedReader(new FileReader(file));
+        try {
+            StringJoiner sj = new StringJoiner(System.lineSeparator());
+            String line = br.readLine();
+            while (line != null) {
+                sj.add(line);
+                line = br.readLine();
+            }
+            return sj.toString();
+        } finally {
+            br.close();
+        }
+    }
+}
